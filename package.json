@@ -4,7 +4,7 @@
   "description": "big integer library to work in Zq",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --experimental-worker",
+    "test": "mocha --experimental-worker -g \"basic pairing\"",
     "buildwasm": "node tools/buildwasm.js",
     "build_bn128": "node tools/buildwasm_bn128.js; browserify main_bn128.js -o build/websnark_bn128.js --exclude worker_threads --exclude crypto; cp build/websnark_bn128.js example/bn128/websnark_bn128.js",
     "build_mnt6753": "node tools/buildwasm_mnt6753.js; browserify main_mnt6753.js -o build/websnark_mnt6753.js --exclude worker_threads --exclude crypto; cp build/websnark_mnt6753.js example/mnt6753/websnark_mnt6753.js"

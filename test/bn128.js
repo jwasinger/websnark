@@ -347,11 +347,13 @@ describe("Basic tests for g1 in bn128", () => {
 
     });
 
+    it("It should do a pairing check on two points", async () => {
 
+    })
 
     it("It should do a basic pairing", async () => {
         const ps = pb.alloc(32);
-        const pOne = pb.alloc(32*12);
+        //const pOne = pb.alloc(32*12);
         pb.set(ps, bigInt(10));
         const pRes1 = pb.alloc(32*12);
         const pRes2 = pb.alloc(32*12);
@@ -363,7 +365,7 @@ describe("Basic tests for g1 in bn128", () => {
         const pG1gen = pb.bn128.pG1gen;
         const pG2gen = pb.bn128.pG2gen;
 
-        pb.ftm_one(pOne);
+        //pb.ftm_one(pOne);
         pb.g1m_timesScalar(pG1gen, ps, 32, pG1s);
         pb.g2m_timesScalar(pG2gen, ps, 32, pG2s);
 

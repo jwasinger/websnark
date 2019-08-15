@@ -17,11 +17,11 @@ buildBn128().then( (bn128) => {
 
         let b_k = [['11559732032986387107991004021392285783925812861821192530917403151452391805634', '10857046999023057135944570762232829481370756359578518086990519993285655852781'], ['4082367875863433681332203403145435568316851327593401208105741076214120093531', '8495653923123431417604973247489272438418190587263600148770280649306958101930']];
 
-	let p_a = bn128.alloc(SIZE_F * 2);
-	let p_b = bn128.alloc(SIZE_F * 2);
-	let p_a_k = bn128.alloc(SIZE_F * 4);
-	let p_b_k = bn128.alloc(SIZE_F * 4);
-	    const p_one = bn128.alloc(SIZE_F * 4);
+	let p_a = bn128.alloc(SIZE_F * 3);
+	let p_b = bn128.alloc(SIZE_F * 3);
+	let p_a_k = bn128.alloc(SIZE_F * 3 * 2);
+	let p_b_k = bn128.alloc(SIZE_F * 3 * 2);
+	    const p_one = bn128.alloc(SIZE_F * 3 * 2);
 	    debugger
 	
 	    bn128.instance.exports.f1m_one(p_one);
@@ -37,11 +37,11 @@ buildBn128().then( (bn128) => {
         bn128.instance.exports.g2m_toMontgomery(p_b_k, p_b_k);
 	    */
 
-        console.log(buf2hex(bn128.getBin(p_a, SIZE_F * 2)));
-        console.log(buf2hex(bn128.getBin(p_b, SIZE_F * 2)));
-        console.log(buf2hex(bn128.getBin(p_a_k, SIZE_F * 4)));
-        console.log(buf2hex(bn128.getBin(p_b_k, SIZE_F * 4)));
-        console.log(buf2hex(bn128.getBin(p_one, SIZE_F * 4)));
+        console.log(buf2hex(bn128.getBin(p_a, SIZE_F * 3)));
+        console.log(buf2hex(bn128.getBin(p_b, SIZE_F * 3)));
+        console.log(buf2hex(bn128.getBin(p_a_k, SIZE_F * 3 * 2)));
+        console.log(buf2hex(bn128.getBin(p_b_k, SIZE_F * 3 * 2)));
+        console.log(buf2hex(bn128.getBin(p_one, SIZE_F * 3 * 2)));
 
         let res_a = bn128.instance.exports.bn128_pairingEq1(p_a, p_a_k, p_one);
 	let res_b = bn128.instance.exports.bn128_pairingEq1(p_b, p_b_k, p_one);
