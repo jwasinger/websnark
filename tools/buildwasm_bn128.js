@@ -7,6 +7,10 @@ const path = require("path");
 function buildWasm() {
     const moduleBuilder = new ModuleBuilder();
     moduleBuilder.setMemory(1000);
+    let f = moduleBuilder.addImportFunction("printMemHex", "env");
+    f.addParam("x", "i32");
+    f.addParam("y", "i32");
+
     buildBn128(moduleBuilder);
 
     const code = moduleBuilder.build();
