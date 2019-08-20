@@ -529,7 +529,6 @@ module.exports = function buildBN128(module, _prefix) {
         const Q2Z = c.i32_const(pQ2 + f2size*2);
 
         f.addCode(
-            c.call("printMemHex", c.i32_const(1), c.i32_const(1)),
             c.call(g2mPrefix + "_affine", QX, cQX),  // TODO Remove if already in affine
             c.call(f2mPrefix + "_copy", cQX, RX),
             c.call(f2mPrefix + "_copy", cQY, RY),
