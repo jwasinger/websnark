@@ -165,6 +165,14 @@ module.exports = function buildBN128(module, _prefix) {
 
         f.addCode(
             c.call(
+                "printMemHex",
+                c.getLocal("x"),
+                c.i32_const(pNonResidueF6),
+            )
+        );
+
+        f.addCode(
+            c.call(
                 f2mPrefix + "_mul",
                 c.i32_const(pNonResidueF6),
                 c.getLocal("x"),
@@ -269,9 +277,12 @@ module.exports = function buildBN128(module, _prefix) {
 
         const c = f.getCodeBuilder();
 
+        /*
         f.addCode(
+            //TODO REMOVE THIS AND REGENERATE
             c.call(g1mPrefix + "_affine", c.getLocal("pP"), c.getLocal("ppreP")),  // TODO Remove if already in affine
         );
+        */
     }
 
     function buildPrepAddStep() {
@@ -525,6 +536,7 @@ module.exports = function buildBN128(module, _prefix) {
         const Q2Z = c.i32_const(pQ2 + f2size*2);
 
         f.addCode(
+            //c.call("debug_printMemHex", pQ2),
             c.call(g2mPrefix + "_affine", QX, cQX),  // TODO Remove if already in affine
             c.call(f2mPrefix + "_copy", cQX, RX),
             c.call(f2mPrefix + "_copy", cQY, RY),

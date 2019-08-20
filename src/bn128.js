@@ -48,6 +48,10 @@ function delay(ms) {
 }
 */
 
+function buf2hex(buffer) { // buffer is an ArrayBuffer
+  return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
+}
+
 function thread(self) {
     let instance;
     let memory;
@@ -188,7 +192,11 @@ async function build() {
 
     bn128.instance = await WebAssembly.instantiate(wasmModule, {
         env: {
-            "memory": bn128.memory
+            "memory": bn128.memory,
+            "printMemHex": function(offset, len) {
+                console.log("printMemHex");
+                console.log(memory.slice(offset, offset + len));
+            }
         }
     });
 
@@ -503,7 +511,7 @@ class Bn128 {
         this.setF6(p + 6*SIZEF1, e[1]);
     }
 
-    setG1Affine(p, e) {
+    setG1(p, e) {
         this.setF1(p, e[0]);
         this.setF1(p + SIZEF1, e[1]);
         this.setF1(p + 2*SIZEF1, 1);
