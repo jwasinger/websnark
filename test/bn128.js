@@ -379,11 +379,23 @@ describe("Basic tests for g1 in bn128", () => {
 
         pb.bn128_prepareG1(pG1gen, pPreP);
         pb.bn128_prepareG2(pG2s, pPreQ);
+
+        console.log("G2 is: ");
+        for (let i = 0; i < 6; i++) {
+            console.log(pb.get(pG2s + i * 32));
+        }
+
+        console.log("coefficients are: ");
+        for (let i = 0; i < 104 * 6; i++) {
+            console.log(pb.get(pPreQ + i * 32));
+        }
+
         pb.bn128_millerLoop(pPreP, pPreQ, pRes3);
         pb.bn128_finalExponentiation(pRes3, pRes4);
 
         const res2 = getFieldElementF12(pRes2);
         const res4 = getFieldElementF12(pRes4);
+
 
         assertEqualF12(res2, res4);
 
@@ -397,6 +409,10 @@ describe("Basic tests for g1 in bn128", () => {
 
         const resL = getFieldElementF12(pRes1);
         const resR = getFieldElementF12(pRes2);
+        console.log(JSON.stringify(resL))
+        console.log(JSON.stringify(resR))
+        console.log(JSON.stringify(res2))
+        console.log(JSON.stringify(res4))
 
         assertEqualF12(resL, resR);
 

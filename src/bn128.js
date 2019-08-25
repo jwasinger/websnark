@@ -22,6 +22,7 @@ const bigInt = require("big-integer");
 const bn128_wasm = require("../build/bn128_wasm.js");
 const assert = require("assert");
 const utils = require("./utils");
+const fs = require('fs')
 
 const SIZEF1 = 32;
 const inBrowser = (typeof window !== "undefined");
@@ -188,14 +189,22 @@ async function build() {
     bn128.memory = new WebAssembly.Memory({initial:5000});
     bn128.i32 = new Uint32Array(bn128.memory.buffer);
 
-    const wasmModule = await WebAssembly.compile(bn128_wasm.code);
+    data = fs.readFileSync("bn128-debug.wasm")
+    const wasmModule = await WebAssembly.compile(data);
+
+    /*
+    fs.writeFileSync("bn128.wasm", bn128_wasm.code, (err) => {
+        if (err)
+            throw err;
+    });
+    */
 
     bn128.instance = await WebAssembly.instantiate(wasmModule, {
         env: {
             "memory": bn128.memory,
             "printMemHex": function(offset, len) {
-                console.log("printMemHex");
-                console.log(memory.slice(offset, offset + len));
+                console.log("printMemHex ", offset, " ", len);
+                console.log(Buffer.from(bn128.memory.buffer.slice(offset, offset + len)).toString('hex'));
             }
         }
     });

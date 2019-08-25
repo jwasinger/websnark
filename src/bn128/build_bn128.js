@@ -30,6 +30,7 @@ module.exports = function buildBN128(module, _prefix) {
 
     const pr = module.alloc(utils.bigInt2BytesLE( r, frsize ));
 
+    buildDebugPrint(module);
     const f1mPrefix = buildF1m(module, q, "f1m");
     buildF1(module, r, "fr", "frm");
     const g1mPrefix = buildCurve(module, "g1m", "f1m");
@@ -40,9 +41,6 @@ module.exports = function buildBN128(module, _prefix) {
     const f2mPrefix = buildF2m(module, "f1m_neg", "f2m", "f1m");
     const g2mPrefix = buildCurve(module, "g2m", "f2m");
     buildMultiexp(module, "g2m", "g2m", "f2m", "fr");
-
-
-
 
     function toMontgomery(a) {
         return bigInt(a).times( bigInt.one.shiftLeft(f1size*8)).mod(q);
@@ -263,6 +261,12 @@ module.exports = function buildBN128(module, _prefix) {
         return res;
     }
 
+    function buildDebugPrint(module) {
+        const f = module.addFunction("printMemHex");
+        f.addParam("a", "i32");
+        f.addParam("b", "i32");
+    }
+
     function buildPrepareG1() {
         const f = module.addFunction(prefix+ "_prepareG1");
         f.addParam("pP", "i32");
@@ -270,12 +274,10 @@ module.exports = function buildBN128(module, _prefix) {
 
         const c = f.getCodeBuilder();
 
-        /*
         f.addCode(
             //TODO REMOVE THIS AND REGENERATE
             c.call(g1mPrefix + "_affine", c.getLocal("pP"), c.getLocal("ppreP")),  // TODO Remove if already in affine
         );
-        */
     }
 
     function buildPrepAddStep() {
@@ -529,9 +531,9 @@ module.exports = function buildBN128(module, _prefix) {
         const Q2Z = c.i32_const(pQ2 + f2size*2);
 
         f.addCode(
-            c.call(g2mPrefix + "_affine", QX, cQX),  // TODO Remove if already in affine
-            c.call(f2mPrefix + "_copy", cQX, RX),
-            c.call(f2mPrefix + "_copy", cQY, RY),
+            //c.call(g2mPrefix + "_affine", QX, cQX),  // TODO Remove if already in affine
+            c.call(f2mPrefix + "_copy", QX, RX),
+            c.call(f2mPrefix + "_copy", QY, RY),
             c.call(f2mPrefix + "_one", RZ),
         );
 
