@@ -16179,10 +16179,27 @@
     i32.add
     call 1)
   (func (;94;) (type 5) (param i32 i32 i32)
+  ;; f2m_mul
     local.get 0
     local.get 1
     i32.const 57160
     call 20
+
+    ;; print c0
+    local.get 0
+    i32.const 32
+    call $printMemHex
+
+    ;; print c1
+    local.get 1
+    i32.const 32 
+    call $printMemHex
+
+    ;; print c0 * c1
+    i32.const 57160
+    i32.const 32 
+    call $printMemHex
+
     local.get 0
     i32.const 32
     i32.add
@@ -18979,41 +18996,72 @@
   (func (;165;) (type 0) (param i32 i32)
     ;; prepare double step
 
+    ;; print X1
+    ;; local.get 0 
+    ;; i32.const 67
+    ;; call $printMemHex
+
+    ;; print Y1
+    ;; local.get 0
+    ;; i32.const 64
+    ;; i32.add
+    ;; i32.const 69
+    ;; call $printMemHex
+
     ;; A = X1 * Y1 / 2
+    ;; local.get 0
+    ;; i32.const 64
+    ;; i32.add ;; Y1
+    ;; i32.const 161064 ;; pTwoInv
+    ;; i32.const 186544 ;; A
+    ;; call 94
+    ;; local.get 0 ;; X1
+    ;; i32.const 186544
+    ;; i32.const 186544
+    ;; call 94
+
+    local.get 0
     local.get 0
     i32.const 64
     i32.add
-    i32.const 161064
-    i32.const 186544
-    call 94
-    local.get 0
-    i32.const 186544
     i32.const 186544
     call 94
 
     ;; print A
-    i32.const 186544
-    i32.const 192
-    call $printMemHex
+    ;; i32.const 186544
+    ;; i32.const 64
+    ;; call $printMemHex
 
-    ;; print Y1
-    local.get 0
-    i32.const 64
-    i32.add
-    i32.const 32
-    call $printMemHex
-
+    ;; print A
+    ;; local.get 0
+    ;; i32.const 64
+    ;; i32.add
+    ;; i32.const 32
+    ;; call $printMemHex
 
     local.get 0
     i32.const 64
     i32.add
     i32.const 186608
     call 96
+
+    ;; print B
+    ;; i32.const 186608
+    ;; i32.const 64
+    ;; call $printMemHex
+
+
     local.get 0
     i32.const 128
     i32.add
     i32.const 186672
     call 96
+
+    ;; print C
+    ;; i32.const 186672
+    ;; i32.const 64
+    ;; call $printMemHex
+
     i32.const 186672
     i32.const 186672
     i32.const 186736
