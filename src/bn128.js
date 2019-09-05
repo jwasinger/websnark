@@ -189,15 +189,16 @@ async function build() {
     bn128.memory = new WebAssembly.Memory({initial:5000});
     bn128.i32 = new Uint32Array(bn128.memory.buffer);
 
-    data = fs.readFileSync("bn128-debug.wasm")
-    const wasmModule = await WebAssembly.compile(data);
-
     /*
-    fs.writeFileSync("bn128.wasm", bn128_wasm.code, (err) => {
+    fs.writeFileSync("bn128-debug.wasm", bn128_wasm.code, (err) => {
         if (err)
             throw err;
     });
     */
+
+    data = fs.readFileSync("bn128-debug.wasm")
+    const wasmModule = await WebAssembly.compile(data);
+
 
     bn128.instance = await WebAssembly.instantiate(wasmModule, {
         env: {
@@ -208,6 +209,7 @@ async function build() {
                 for (let i = offset; i < offset + len; i++) {
                     process.stdout.write(Buffer.from(bn128.memory.buffer.slice(i, i + 1)).toString('hex'));
                 }
+
                 console.log()
             }
         }

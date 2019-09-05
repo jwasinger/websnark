@@ -6,7 +6,7 @@ const SIZE_F = 32
 let zk = {};
 
 function buf2hex(buffer) { // buffer is an ArrayBuffer
-  return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
+  return Array.prototype.map.call(new Uint8Array(buffer).reverse(), x => ('00' + x.toString(16)).slice(-2)).join('');
 }
 
 /*
@@ -87,9 +87,25 @@ let preP = ['1970161699804602208003146153308168334934992250800122582942901268247
 
         bn128.setG1(pProofA, proof_a) // same as setG1Affine
         bn128.instance.exports.f1m_one(pProofA + SIZE_F * 2);
+
         //bn128.instance.exports.g1m_toMontgomery(pProofA, pProofA)
         bn128.setG2Affine(pVKA, vk_a)
-        //bn128.instance.exports.f2m_one(pVKA + SIZE_F * 4);
+        console.log("vk_a is ");
+        console.log(buf2hex(bn128.getBin(pVKA, SIZE_F)));
+        console.log(buf2hex(bn128.getBin(pVKA + SIZE_F , SIZE_F)));
+        console.log(buf2hex(bn128.getBin(pVKA + SIZE_F * 2 , SIZE_F)));
+        console.log(buf2hex(bn128.getBin(pVKA + SIZE_F * 3 , SIZE_F)));
+        console.log(buf2hex(bn128.getBin(pVKA + SIZE_F * 4 , SIZE_F)));
+        console.log(buf2hex(bn128.getBin(pVKA + SIZE_F * 5 , SIZE_F)));
+
+        bn128.instance.exports.f2m_one(pVKA + SIZE_F * 4);
+        console.log("vk_a after 'f2m_one' is ");
+        console.log(buf2hex(bn128.getBin(pVKA, SIZE_F)));
+        console.log(buf2hex(bn128.getBin(pVKA + SIZE_F , SIZE_F)));
+        console.log(buf2hex(bn128.getBin(pVKA + SIZE_F * 2 , SIZE_F)));
+        console.log(buf2hex(bn128.getBin(pVKA + SIZE_F * 3 , SIZE_F)));
+        console.log(buf2hex(bn128.getBin(pVKA + SIZE_F * 4 , SIZE_F)));
+        console.log(buf2hex(bn128.getBin(pVKA + SIZE_F * 5 , SIZE_F)));
 
         //bn128.instance.exports.g2m_toMontgomery(pVKA, pVKA)
 
@@ -104,7 +120,7 @@ let preP = ['1970161699804602208003146153308168334934992250800122582942901268247
 
         //bn128.instance.exports.g2m_toMontgomery(pVKA, pVKA)
 
-        console.log("G2");
+        console.log("g2");
         console.log(buf2hex(bn128.getBin(pVKA, SIZE_F)));
         console.log(buf2hex(bn128.getBin(pVKA + SIZE_F, SIZE_F)));
         console.log(buf2hex(bn128.getBin(pVKA + SIZE_F * 2, SIZE_F)));

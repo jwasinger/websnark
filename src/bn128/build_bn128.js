@@ -548,7 +548,7 @@ module.exports = function buildBN128(module, _prefix) {
                 c.if(
                     c.i32_load8_s(c.getLocal("i"), pAteLoopBitBytes),
                     [
-                        ...c.call(prefix + "_prepAddStep", cQX, R, c.getLocal("pCoef")),
+                        ...c.call(prefix + "_prepAddStep", QX, R, c.getLocal("pCoef")),
                         ...c.setLocal("pCoef", c.i32_add(c.getLocal("pCoef"), c.i32_const(ateCoefSize))),
                     ]
                 ),
@@ -559,7 +559,7 @@ module.exports = function buildBN128(module, _prefix) {
         );
 
         f.addCode(
-            c.call(prefix + "_mulByQ", cQX, Q1),
+            c.call(prefix + "_mulByQ", QX, Q1),
             c.call(prefix + "_mulByQ", Q1, Q2)
         );
 
