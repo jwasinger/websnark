@@ -206,7 +206,7 @@ async function build() {
             "printMemHex": function(offset, len) {
                 console.log("printMemHex ", offset, " ", len);
 
-                for (let i = offset; i < offset + len; i++) {
+                for (let i = ( offset + len ) - 1; i >= offset; i--) {
                     process.stdout.write(Buffer.from(bn128.memory.buffer.slice(i, i + 1)).toString('hex'));
                 }
 

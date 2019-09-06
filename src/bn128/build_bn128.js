@@ -531,9 +531,9 @@ module.exports = function buildBN128(module, _prefix) {
         const Q2Z = c.i32_const(pQ2 + f2size*2);
 
         f.addCode(
-            //c.call(g2mPrefix + "_affine", QX, cQX),  // TODO Remove if already in affine
-            c.call(f2mPrefix + "_copy", QX, RX),
-            c.call(f2mPrefix + "_copy", QY, RY),
+            c.call(g2mPrefix + "_affine", QX, cQX),
+            c.call(f2mPrefix + "_copy", cQX, RX),
+            c.call(f2mPrefix + "_copy", cQY, RY),
             c.call(f2mPrefix + "_one", RZ),
         );
 
@@ -548,7 +548,7 @@ module.exports = function buildBN128(module, _prefix) {
                 c.if(
                     c.i32_load8_s(c.getLocal("i"), pAteLoopBitBytes),
                     [
-                        ...c.call(prefix + "_prepAddStep", QX, R, c.getLocal("pCoef")),
+                        ...c.call(prefix + "_prepAddStep", cQX, R, c.getLocal("pCoef")),
                         ...c.setLocal("pCoef", c.i32_add(c.getLocal("pCoef"), c.i32_const(ateCoefSize))),
                     ]
                 ),
@@ -559,7 +559,7 @@ module.exports = function buildBN128(module, _prefix) {
         );
 
         f.addCode(
-            c.call(prefix + "_mulByQ", QX, Q1),
+            c.call(prefix + "_mulByQ", cQX, Q1),
             c.call(prefix + "_mulByQ", Q1, Q2)
         );
 
