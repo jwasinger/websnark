@@ -17,6 +17,7 @@ async function do_all() {
     }, 32); 
 }
 */
+/*
 function getFieldElementF12(bn128, pR) {
     debugger
     return [
@@ -45,6 +46,7 @@ function getFieldElementF12(bn128, pR) {
         ]
     ];
 }
+*/
 
 buildBn128().then( (bn128) => {
     zk.bn128 = bn128;
@@ -136,18 +138,16 @@ let preP = ['1970161699804602208003146153308168334934992250800122582942901268247
         }
 
 
-        /*
-        bn128.instance.exports.bn128_millerLoop(pPreP, pPreQ, pAux2);
-        bn128.instance.exports.bn128_finalExponentiation(pAux2, pAux3);
-        */
+        //bn128.instance.exports.bn128_millerLoop(pProofA, pCoef, pAux2);
+        //bn128.instance.exports.bn128_finalExponentiation(pAux2, pAux3);
 
 
         //let f = getFieldElementF12(bn128, pAux3);
         //console.log(f)
 
+        /*
         console.log("pairing result");
 
-        /*
         for (let i = 0; i < 12; i++) {
             console.log(buf2hex(bn128.getBin(pAux3+SIZE_F*i, SIZE_F)));
         }
