@@ -48,6 +48,31 @@ function getFieldElementF12(bn128, pR) {
 }
 */
 
+function printFq12(bn128, p) {
+    const SIZE_F = 32;
+
+    for (let i = 0; i < 12; i++) {
+        console.log(buf2hex(bn128.getBin(p + SIZE_F * i, SIZE_F)));
+    }
+}
+
+function printFq2(bn128, pG2) {
+    const SIZE_F = 32;
+
+    for (let i = 0; i < 6; i++) {
+        console.log(buf2hex(bn128.getBin(pG2 + SIZE_F * i, SIZE_F)));
+    }
+}
+
+function printFq1(bn128, pG1) {
+    const SIZE_F = 32;
+
+    for (let i = 0; i < 3; i++) {
+        console.log(buf2hex(bn128.getBin(pG1 + SIZE_F * i, SIZE_F)));
+    }
+
+}
+
 buildBn128().then( (bn128) => {
     zk.bn128 = bn128;
 
@@ -64,8 +89,8 @@ let preP = ['1970161699804602208003146153308168334934992250800122582942901268247
        const vk_a = [["10158637525057481760056375716221076310331756939873412782566291572681344016716", "16548728159780093650905724596480242950527136765259244416289285297574698562603"],
  ["12031064823122150770091404076492969192448060276855277898032078516074409935901", "17060574385764455113052073757045274655042048873252862760623781185577070940947"]];
  */
-        const proof_a_p = ['14567039575197480528119959961327714497845927467213154926371421015062300663263', '1000373253310235159656639300753059983014930924649970939079246556995097557245']
-        const p2 = [/*TODO*/]	 
+        const neg_proof_a_p = [bigInt('0c0e329b4d73cd52c231f9e064460a7a9f77c7c8752c26efc52e6c7f37d02193', 16), bigInt('25f5bae6cf6720e4519b0c6d5b4d6950c116c773a7869909ea0ef64fc73d9ad1', 16)];
+        const p2 = [bigInt('19573841af96503bfbb8264797811adfdceb1935497b01728e83b5d102bc2026', 16), bigInt('14fef0833aea7b6b09e950fc52a02f866043dd5a5802d8c4afb4737da84c6140', 16), bigInt('0da4a0e693fd648255f935be33351076dc57f922327d3cbb64095b56c71856ee', 16), bigInt('28fd7eebae9e4206ff9e1a62231b7dfefe7fd297f59e9b78619dfa9d886be9f6', 16)];
 
         /*
         const vk_a = [['72845808812592855736508517959950295400388085950499134060650391241680795014710', '78100026775956249164162204243472275528800871643742955729366952509822072757435'], ['76475013071130644230541689872427101644031042132633025313035776555027131176700', '30658591281525740283719694118570154825985583194697552416269170562378337253327']]
@@ -80,18 +105,29 @@ let preP = ['1970161699804602208003146153308168334934992250800122582942901268247
         const pVKA = bn128.alloc(SIZE_F * 6);
         const pCoef = bn128.alloc(SIZE_F * 6 +  SIZE_F * 6 * 103);
 
-        const pProofAP = bn128.alloc(SIZE_F * 3);
+        const pP2 = bn128.alloc(SIZE_F * 6);
+        const pNegAP = bn128.alloc(SIZE_F * 3);
         /*
         const pPreP = bn128.alloc(SIZE_F * 3);
         const pG2s = bn128.alloc(SIZE_F * 6);
         const pPreQ = bn128.alloc(SIZE_F*2*3 + SIZE_F*2*3*103);
         */
 
-        bn128.setG1(pProofA, proof_a) // same as setG1Affine
-        bn128.instance.exports.f1m_one(pProofA + SIZE_F * 2);
 
-        //bn128.instance.exports.g1m_toMontgomery(pProofA, pProofA)
-        bn128.setG2Affine(pVKA, vk_a)
+        bn128.setG1(pProofA, proof_a) // same as setG1Affine
+        //bn128.instance.exports.f1m_one(pProofA + SIZE_F * 2);
+        bn128.instance.exports.g1m_toMontgomery(pProofA, pProofA)
+
+        // I think pVKA is already in montgomery form?
+        bn128.setG2Affine(pVKA, vk_a);
+
+        bn128.setG1(pNegAP, neg_proof_a_p);
+        bn128.instance.exports.g1m_toMontgomery(pNegAP, pNegAP);
+
+        bn128.setG2Affine(pP2, p2);
+        bn128.instance.exports.f2m_one(pP2 + SIZE_F * 4);
+        bn128.instance.exports.g2m_toMontgomery(pP2, pP2);
+
         console.log("vk_a is ");
         console.log(buf2hex(bn128.getBin(pVKA, SIZE_F)));
         console.log(buf2hex(bn128.getBin(pVKA + SIZE_F , SIZE_F)));
@@ -100,7 +136,8 @@ let preP = ['1970161699804602208003146153308168334934992250800122582942901268247
         console.log(buf2hex(bn128.getBin(pVKA + SIZE_F * 4 , SIZE_F)));
         console.log(buf2hex(bn128.getBin(pVKA + SIZE_F * 5 , SIZE_F)));
 
-        bn128.instance.exports.f2m_one(pVKA + SIZE_F * 4);
+        //bn128.instance.exports.f2m_one(pVKA + SIZE_F * 4);
+
         console.log("vk_a after 'f2m_one' is ");
         console.log(buf2hex(bn128.getBin(pVKA, SIZE_F)));
         console.log(buf2hex(bn128.getBin(pVKA + SIZE_F , SIZE_F)));
@@ -109,20 +146,30 @@ let preP = ['1970161699804602208003146153308168334934992250800122582942901268247
         console.log(buf2hex(bn128.getBin(pVKA + SIZE_F * 4 , SIZE_F)));
         console.log(buf2hex(bn128.getBin(pVKA + SIZE_F * 5 , SIZE_F)));
 
+        console.log("negated point AP is");
+        //console.log(buf2hex(bn128.getBin(pVKA, SIZE_F)));
+        printFq1(bn128, pNegAP);
+
+        console.log("point 2 is");
+        printFq2(bn128, pP2);
+
         //bn128.instance.exports.g2m_toMontgomery(pVKA, pVKA)
 
         let pAux = bn128.alloc(SIZE_F * 12);
-        let pAux2 = bn128.alloc(SIZE_F * 12);
-        let pAux3 = bn128.alloc(SIZE_F * 12);
-        bn128.instance.exports.ftm_one(pAux);
+        //let pAux2 = bn128.alloc(SIZE_F * 12);
+        // let pAux3 = bn128.alloc(SIZE_F * 12);
+        //bn128.instance.exports.ftm_one(pAux);
 
-        bn128.instance.exports.bn128_prepareG1(bn128.pG1gen, pProofA);
+        //bn128.instance.exports.bn128_prepareG1(bn128.pG1gen, pProofA);
+
         console.log("G1");
-        console.log(buf2hex(bn128.getBin(pProofA, SIZE_F * 3)));
+        for (let i = 0; i < 3; i++) {
+            console.log(buf2hex(bn128.getBin(pProofA + SIZE_F * i, SIZE_F)));
+        }
 
         //bn128.instance.exports.g2m_toMontgomery(pVKA, pVKA)
 
-        console.log("g2");
+        console.log("G2");
         console.log(buf2hex(bn128.getBin(pVKA, SIZE_F)));
         console.log(buf2hex(bn128.getBin(pVKA + SIZE_F, SIZE_F)));
         console.log(buf2hex(bn128.getBin(pVKA + SIZE_F * 2, SIZE_F)));
@@ -130,6 +177,7 @@ let preP = ['1970161699804602208003146153308168334934992250800122582942901268247
         console.log(buf2hex(bn128.getBin(pVKA + SIZE_F * 4, SIZE_F)));
         console.log(buf2hex(bn128.getBin(pVKA + SIZE_F * 5, SIZE_F)));
 
+        /*
         bn128.instance.exports.bn128_prepareG2(pVKA, pCoef);
 
         console.log("pcoef");
@@ -140,22 +188,30 @@ let preP = ['1970161699804602208003146153308168334934992250800122582942901268247
 
         bn128.instance.exports.bn128_millerLoop(pProofA, pCoef, pAux2);
         bn128.instance.exports.bn128_finalExponentiation(pAux2, pAux3);
+        */
+
+        bn128.instance.exports.bn128_pairingEq2(pProofA, pVKA, pNegAP, pP2, pAux);
 
 
         //let f = getFieldElementF12(bn128, pAux3);
         //console.log(f)
 
-        console.log("pairing result");
+        /*
+        console.log("miller loop result");
 
         for (let i = 0; i < 12; i++) {
             console.log(buf2hex(bn128.getBin(pAux3+SIZE_F*i, SIZE_F)));
         }
+        */
 
         /*
         for (let i = 0; i < 6*104; i++) {
             console.log(buf2hex(bn128.getBin(pAux3+SIZE_F*i, SIZE_F )));
         }
         */
+
+        console.log("pairing result is: ");
+        printFq12(bn128, pAux);
     }
     zk.verify();
 });
