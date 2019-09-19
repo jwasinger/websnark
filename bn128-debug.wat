@@ -14,8 +14,8 @@
   (type (;12;) (func (param i32 i32 i32 i32 i32 i32 i32 i32 i32) (result i32)))
   (type (;13;) (func (param i32 i32 i32 i32 i32 i32 i32 i32 i32 i32 i32) (result i32)))
   (import "env" "memory" (memory (;0;) 1000))
-  (import "env" "printMemHex" (func $printMemHex (param i32 i32)))
   ;; (func (;0;) (type 0) (param i32 i32))
+  (import "env" "printMemHex" (func $printMemHex (param i32 i32)))
   (func (;1;) (type 0) (param i32 i32)
     local.get 1
     local.get 0
@@ -18847,8 +18847,27 @@
         br 0 (;@2;)
       end
     end)
-  ;; prepareAdd
   (func (;164;) (type 5) (param i32 i32 i32)
+    ;; addition step
+
+    ;; local.get 1
+    ;; i32.const 64
+    ;; call $printMemHex
+
+    ;; local.get 0
+    ;; i32.const 64
+    ;; i32.add
+    ;; i32.const 64
+    ;; call $printMemHex
+    
+    ;; print Z - pre
+
+    ;; local.get 0
+    ;; i32.const 128
+    ;; i32.add
+    ;; i32.const 64
+    ;; call $printMemHex
+
     local.get 0
     local.get 1
     i32.const 128
@@ -18858,16 +18877,19 @@
     i32.add
     call 94
 
-    ;; print X
+
+    ;;print X2
     local.get 0
-    i32.const 33
+    i32.const 64
+    i32.add
+    i32.const 64
     call $printMemHex
 
-    ;; print Y
-    local.get 0
-    i32.const 32
+    ;; print Z1
+    local.get 1
+    i32.const 128
     i32.add
-    i32.const 33
+    i32.const 64
     call $printMemHex
 
     local.get 1
@@ -18878,6 +18900,15 @@
     i32.const 64
     i32.add
     call 98
+
+    ;; print X2 * Z1
+
+    local.get 2
+    i32.const 64
+    i32.add
+    i32.const 64
+    call $printMemHex
+
     local.get 0
     i32.const 64
     i32.add
@@ -18887,12 +18918,9 @@
     i32.const 186096
     call 94
 
-    ;; print D.X
-    local.get 2
-    i32.const 63
-    i32.add
-    i32.const 65
-    call $printMemHex
+    ;; i32.const 186096
+    ;; i32.const 64
+    ;; call $printMemHex
 
     local.get 1
     i32.const 64
@@ -18900,6 +18928,11 @@
     i32.const 186096
     i32.const 186096
     call 98
+
+    ;; i32.const 186096
+    ;; i32.const 64
+    ;; call $printMemHex
+
     local.get 2
     i32.const 64
     i32.add
@@ -18974,6 +19007,14 @@
     i32.const 128
     i32.add
     call 94
+
+    ;; print post y
+    ;; local.get 1
+    ;; i32.const 64
+    ;; i32.add
+    ;; i32.const 64
+    ;; call $printMemHex
+
     local.get 2
     i32.const 64
     i32.add
@@ -19000,6 +19041,7 @@
     i32.add
     call 99)
   (func (;165;) (type 0) (param i32 i32)
+    ;; double step
     local.get 0
     i32.const 64
     i32.add
@@ -19015,6 +19057,17 @@
     i32.add
     i32.const 186608
     call 96
+
+    ;; local.get 0
+    ;; i32.const 128
+    ;; i32.add
+    ;; i32.const 64
+    ;; call $printMemHex
+
+    ;; i32.const 186608
+    ;; i32.const 64
+    ;; call $printMemHex
+
     local.get 0
     i32.const 128
     i32.add
@@ -19048,6 +19101,12 @@
     i32.const 161064
     i32.const 186928
     call 94
+
+    ;; print G
+    ;; i32.const 186928
+    ;; i32.const 64
+    ;; call $printMemHex
+
     i32.const 186608
     i32.const 186672
     i32.const 187248
@@ -19106,12 +19165,32 @@
     i32.const 64
     i32.add
     call 98
+
+    ;; local.get 0
+    ;; i32.const 64
+    ;; i32.add
+    ;; i32.const 64
+    ;; call $printMemHex
+
     i32.const 186608
     i32.const 186992
     local.get 0
     i32.const 128
     i32.add
     call 94
+
+    ;; i32.const 69
+    ;; i32.const 69
+    ;; call $printMemHex
+
+    ;; i32.const 186608
+    ;; i32.const 64
+    ;; call $printMemHex
+
+    ;; i32.const 186992
+    ;; i32.const 64
+    ;; call $printMemHex
+
     i32.const 161000
     i32.const 187056
     local.get 1
@@ -19134,7 +19213,15 @@
     local.get 1
     i32.const 128
     i32.add
-    call 97)
+    call 97
+ 
+    ;; local.get 0
+    ;; i32.const 128
+    ;; i32.add
+    ;; i32.const 64
+    ;; call $printMemHex
+     
+    )
   (func (;166;) (type 0) (param i32 i32)
     local.get 0
     local.get 1
@@ -19172,15 +19259,39 @@
   (func (;168;) (type 0) (param i32 i32)
     (local i32 i32)
     local.get 0
-    i32.const 187440
+    local.get 1
+    i32.const 0
+    i32.add
     call 93
     local.get 0
     i32.const 64
     i32.add
+    local.get 1
+    i32.const 64
+    i32.add
+    call 93
+    local.get 0
+    i32.const 128
+    i32.add
+    local.get 1
+    i32.const 128
+    i32.add
+    call 93
+    local.get 1
+    i32.const 0
+    i32.add
+    i32.const 187440
+    call 93
+    local.get 1
+    i32.const 64
+    i32.add
     i32.const 187504
     call 93
+    local.get 1
+    i32.const 128
+    i32.add
     i32.const 187568
-    call 92
+    call 93
     local.get 1
     i32.const 192
     i32.add
@@ -19199,10 +19310,12 @@
         local.get 3
         i32.load8_s offset=166056
         if  ;; label = @3
-          local.get 0
+          local.get 1
+          i32.const 0
+          i32.add
           i32.const 187440
           local.get 2
-          call 164 ;; call prepareAdd step
+          call 164
           local.get 2
           i32.const 192
           i32.add
@@ -19218,7 +19331,9 @@
         br 0 (;@2;)
       end
     end
-    local.get 0
+    local.get 1
+    i32.const 0
+    i32.add
     i32.const 187632
     call 167
     i32.const 187632
