@@ -3,6 +3,7 @@ const buildProtoboard = require("wasmbuilder").buildProtoboard;
 const buildBn128 = require("./src/bn128.js");
 const bigInt = require('big-integer')
 const SIZE_F = 32
+const assert = require('assert');
 let zk = {};
 
 function buf2hex(buffer) { // buffer is an ArrayBuffer
@@ -67,6 +68,7 @@ let preP = ['1970161699804602208003146153308168334934992250800122582942901268247
 
         const pP2 = bn128.alloc(SIZE_F * 6);
         const pNegAP = bn128.alloc(SIZE_F * 3);
+        const pOne = bn128.alloc(SIZE_F * 12);
 
         bn128.setG1(pProofA, proof_a) // same as setG1Affine
         //bn128.instance.exports.f1m_one(pProofA + SIZE_F * 2);
@@ -76,11 +78,14 @@ let preP = ['1970161699804602208003146153308168334934992250800122582942901268247
         bn128.setG2Affine(pVKA, vk_a);
 
         bn128.setG1(pNegAP, neg_proof_a_p);
-        bn128.instance.exports.g1m_toMontgomery(pNegAP, pNegAP);
+        //bn128.instance.exports.g1m_toMontgomery(pNegAP, pNegAP);
 
         bn128.setG2Affine(pP2, p2);
         bn128.instance.exports.f2m_one(pP2 + SIZE_F * 4);
-        bn128.instance.exports.g2m_toMontgomery(pP2, pP2);
+        //bn128.instance.exports.g2m_toMontgomery(pP2, pP2);
+
+        console.log("pProofA is ");
+        printFq1(bn128, pProofA);
 
         console.log("vk_a is ");
 
@@ -93,14 +98,15 @@ let preP = ['1970161699804602208003146153308168334934992250800122582942901268247
         console.log("point 2 is");
         printFq2(bn128, pP2);
 
+        console.log("computing pairing....");
+
         //bn128.instance.exports.g2m_toMontgomery(pVKA, pVKA)
 
         let pAux = bn128.alloc(SIZE_F * 12);
 
-        bn128.instance.exports.bn128_pairingEq2(pProofA, pVKA, pNegAP, pP2, pAux);
+        assert(bn128.instance.exports.bn128_pairingEq2(pProofA, pVKA, pNegAP, pP2, bn128.pOneT));
 
-        console.log("pairing result is: ");
-        printFq12(bn128, pAux);
+        console.log("pairing check successful");
     }
     zk.verify();
 });
