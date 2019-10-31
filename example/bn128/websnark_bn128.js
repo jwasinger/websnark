@@ -5040,6 +5040,9 @@ function thread(self) {
         return p;
     }
 
+
+
+
     function getBin(p, l) {
         return memory.buffer.slice(p, p+l);
     }
@@ -5697,46 +5700,78 @@ class Bn128 {
 
         // 1.- start the all precompute G2
         this.setG1Affine(pA, proof.pi_a);
-        this.instance.exports.g1m_toMontgomery(pA, pA);
-
         this.setG2Affine(pB, proof.pi_b);
-        this.instance.exports.g2m_toMontgomery(pB, pB);
-
         this.setG1Affine(pC, proof.pi_c);
-        this.instance.exports.g1m_toMontgomery(pC, pC);
-
         this.setG2Affine(pDelta2, verificationKey.vk_delta_2);
-        this.instance.exports.g2m_toMontgomery(pDelta2, pDelta2);
-
         this.setG2Affine(pGamma2, verificationKey.vk_gamma_2);
-        this.instance.exports.g2m_toMontgomery(pGamma2, pGamma2);
-
         this.setF12(pAlfaBeta, verificationKey.vk_alfabeta_12);
-        this.instance.exports.ftm_toMontgomery(pAlfaBeta, pAlfaBeta);
-
         this.setG1Affine(pAlfa1, verificationKey.vk_alfa_1);
-        this.instance.exports.g1m_toMontgomery(pAlfa1, pAlfa1);
-
         this.setG2Affine(pBeta2, verificationKey.vk_beta_2);
+
+        /*
+        console.log(buf2hex(getBin(this.memory, pA, 96)));
+        console.log(buf2hex(getBin(this.memory, pB, 192)));
+        console.log(buf2hex(getBin(this.memory, pC, 96)));
+        console.log(buf2hex(getBin(this.memory, pAlfa1, 96)));
+        console.log(buf2hex(getBin(this.memory, pBeta2, 192)));
+        console.log(buf2hex(getBin(this.memory, pGamma2, 192)));
+        console.log(buf2hex(getBin(this.memory, pDelta2, 192)));
+        */
+
+        this.instance.exports.g1m_toMontgomery(pA, pA);
+        this.instance.exports.g2m_toMontgomery(pB, pB);
+        this.instance.exports.g1m_toMontgomery(pC, pC);
+        this.instance.exports.g2m_toMontgomery(pDelta2, pDelta2);
+        this.instance.exports.g2m_toMontgomery(pGamma2, pGamma2);
+        this.instance.exports.ftm_toMontgomery(pAlfaBeta, pAlfaBeta);
+        this.instance.exports.g1m_toMontgomery(pAlfa1, pAlfa1);
         this.instance.exports.g2m_toMontgomery(pBeta2, pBeta2);
+
+        /*
+        console.log(buf2hex(getBin(this.memory, pA, 96)));
+        console.log(buf2hex(getBin(this.memory, pB, 192)));
+        console.log(buf2hex(getBin(this.memory, pC, 96)));
+        console.log(buf2hex(getBin(this.memory, pAlfa1, 96)));
+        console.log(buf2hex(getBin(this.memory, pBeta2, 192)));
+        console.log(buf2hex(getBin(this.memory, pGamma2, 192)));
+        console.log(buf2hex(getBin(this.memory, pDelta2, 192)));
+        */
 
         this.setG1Affine(pIC, verificationKey.IC[0]);
         this.instance.exports.g1m_toMontgomery(pIC, pIC);
+        console.log(buf2hex(getBin(this.memory, pIC, 192)));
+
         for (let i=0; i<input.length; i++) {
             this.setG1Affine(pICaux, verificationKey.IC[i+1]);
             this.instance.exports.g1m_toMontgomery(pICaux, pICaux);
 
             this.setF1(pICr, input[i]);
             if (this.instance.exports.int_gte(pICr, this.pr)) return false;
+
+
             this.instance.exports.g1m_timesScalar(pICaux, pICr, SIZEF1, pICaux);
 
             this.instance.exports.g1m_add(pICaux, pIC, pIC);
+            console.log(buf2hex(getBin(this.memory, pIC, 192)));
         }
+
+
+
         this.instance.exports.g1m_affine(pIC, pIC);
 
         this.instance.exports.g1m_neg(pIC, pIC);
         this.instance.exports.g1m_neg(pC, pC);
         this.instance.exports.g1m_neg(pAlfa1, pAlfa1);
+
+		function buf2hex(buffer) { // buffer is an ArrayBuffer
+			return Array.prototype.map.call(new Uint8Array(buffer), x => ('00' + x.toString(16)).slice(-2)).join('');
+		}
+
+        function getBin(memory, p, l) {
+            return memory.buffer.slice(p, p+l);
+        }
+
+
         const valid = this.instance.exports.bn128_pairingEq4(pA, pB, pIC, pGamma2, pC, pDelta2, pAlfa1, pBeta2, this.pOneT);
 //        const valid = this.instance.exports.bn128_pairingEq3(pA, pB, pIC, pGamma2, pC, pDelta2, pAlfaBeta);
 
